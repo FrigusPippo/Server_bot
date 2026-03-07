@@ -2,13 +2,11 @@ const mineflayer = require('mineflayer');
 const { Movements, pathfinder, goals } = require('mineflayer-pathfinder');
 const { GoalBlock } = goals;
 const config = require('./settings.json');
-const express = require('express');
 const http = require('http');
 
 // ============================================================
 // EXPRESS SERVER - Keep Render/Aternos alive
 // ============================================================
-const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Bot state tracking
