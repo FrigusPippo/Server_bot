@@ -20,7 +20,6 @@ let botState = {
 
 // Health check endpoint for monitoring
 // Health check endpoint for monitoring
-app.get('/', (req, res) => {
   // "Blue Teal Shadow" Theme - Live Dashboard
   res.send(`
     <!DOCTYPE html>
@@ -198,8 +197,6 @@ app.get('/', (req, res) => {
     </html>
   `);
 });
-
-app.get('/tutorial', (req, res) => {
   res.send(`
     <html>
       <head>
@@ -253,8 +250,6 @@ app.get('/tutorial', (req, res) => {
     </html>
   `);
 });
-
-app.get('/health', (req, res) => {
   res.json({
     status: botState.connected ? 'connected' : 'disconnected',
     uptime: Math.floor((Date.now() - botState.startTime) / 1000),
@@ -265,9 +260,6 @@ app.get('/health', (req, res) => {
   });
 });
 
-app.get('/ping', (req, res) => res.send('pong'));
-
-app.listen(PORT, '0.0.0.0', () => {
   console.log(`[Server] HTTP server started on port ${PORT}`);
 });
 
@@ -336,7 +328,7 @@ function getReconnectDelay() {
   const maxDelay = config.utils['max-reconnect-delay'] || 15000;
 
   // Use a much gentler backoff or just a flat delay if user wants "lower"
-  // Current logic: attempts * 1000 + base, capped at max
+  // Current logic: attempts * 1000 + base, c//apped at max
   const delay = Math.min(baseDelay + (botState.reconnectAttempts * 1000), maxDelay);
 
   return delay;
@@ -831,7 +823,7 @@ function sendDiscordWebhook(content, color = 0x0099ff) {
     path: urlParts.pathname + urlParts.search,
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': '//application/json',
       'Content-Length': payload.length
     }
   };
