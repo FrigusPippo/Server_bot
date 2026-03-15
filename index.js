@@ -12,19 +12,28 @@ function createBot(username) {
         host: 'FrigusPippo.aternos.me',
         port: 59506,
         username: username,
-        version: '1.21.11'
+        version: '1.21.1'
     })
 
     bot.on('login', () => {
         console.log(`${username} has joined the server!`)
 
-        // Anti-AFK: rotate and jump every 30 seconds
+        // Anti-AFK: walk in a random direction every 30 seconds
         setInterval(() => {
+            // Look in a random direction
             const yaw = Math.random() * Math.PI * 2
-            const pitch = (Math.random() - 0.5) * Math.PI
+            const pitch = (Math.random() - 0.5) * 0.5
             bot.look(yaw, pitch, false)
+
+            // Walk forward for 2 seconds then stop
+            bot.setControlState('forward', true)
             bot.setControlState('jump', true)
-            setTimeout(() => bot.setControlState('jump', false), 500)
+            setTimeout(() => {
+                bot.setControlState('jump', false)
+            }, 500)
+            setTimeout(() => {
+                bot.setControlState('forward', false)
+            }, 2000)
         }, 30000)
     })
 
