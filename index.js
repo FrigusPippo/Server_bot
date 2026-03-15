@@ -12,7 +12,7 @@ function createBot(username) {
         host: 'FrigusPippo.aternos.me',
         port: 59506,
         username: username,
-        version: '1.21.1'
+        version: '1.21.11'
     })
 
     bot.on('login', () => {
