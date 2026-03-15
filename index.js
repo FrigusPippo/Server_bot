@@ -7,16 +7,16 @@ http.createServer((req, res) => {
     res.end('Bot is running!')
 }).listen(3000, () => console.log('Web server running on port 3000'))
 
-function createBot() {
+function createBot(username) {
     const bot = mineflayer.createBot({
         host: 'FrigusPippo.aternos.me',
         port: 59506,
-        username: 'AFK_Bot',
+        username: username,
         version: '1.21.1'
     })
 
     bot.on('login', () => {
-        console.log('Bot has joined the server!')
+        console.log(`${username} has joined the server!`)
 
         // Anti-AFK: rotate and jump every 30 seconds
         setInterval(() => {
@@ -30,11 +30,13 @@ function createBot() {
 
     // Auto-reconnect if kicked or server restarts
     bot.on('end', () => {
-        console.log('Bot disconnected. Reconnecting in 30 seconds...')
-        setTimeout(createBot, 30000)
+        console.log(`${username} disconnected. Reconnecting in 30 seconds...`)
+        setTimeout(() => createBot(username), 30000)
     })
 
-    bot.on('error', (err) => console.log(err))
+    bot.on('error', (err) => console.log(`${username} error:`, err))
 }
 
-createBot()
+// Start two bots with different usernames
+createBot('AFK_Bot')
+setTimeout(() => createBot('AFK_Bot_2'), 5000)
