@@ -5,7 +5,7 @@ const http = require('http')
 http.createServer((req, res) => {
     res.writeHead(200)
     res.end('Bot is running!')
-}).listen(3000, () => console.log('Web server running on port 3000'))
+}).listen(process.env.PORT || 3000, () => console.log('Web server running!'))
 
 function createBot(username) {
     const bot = mineflayer.createBot({
