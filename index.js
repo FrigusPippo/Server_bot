@@ -1,11 +1,29 @@
 const mineflayer = require('mineflayer')
 const http = require('http')
+const https = require('https')
 
-// Small web server so UptimeRobot has a URL to ping
+const PORT = process.env.PORT || 3000
+const SELF_URL = process.env.RENDER_EXTERNAL_URL
+
+// Small web server so external monitors have a URL to ping
 http.createServer((req, res) => {
     res.writeHead(200)
     res.end('Bot is running!')
-}).listen(process.env.PORT || 3000, () => console.log('Web server running!'))
+}).listen(PORT, () => console.log('Web server running!'))
+
+// Self-ping every 4 minutes to stay alive without relying on UptimeRobot
+if (SELF_URL) {
+    setInterval(() => {
+        https.get(SELF_URL, (res) => {
+            console.log(`Self-ping OK: ${res.statusCode}`)
+        }).on('error', (err) => {
+            console.log(`Self-ping failed: ${err.message}`)
+        })
+    }, 4 * 60 * 1000)
+    console.log(`Self-pinging ${SELF_URL} every 4 minutes`)
+} else {
+    console.log('No RENDER_EXTERNAL_URL set, skipping self-ping')
+}
 
 // Prevent any single crash from taking down the whole process
 process.on('uncaughtException', (err) => {
@@ -36,7 +54,6 @@ function createBot(username, delay = 5000) {
         bot.on('login', () => {
             console.log(`${username} has joined the server!`)
 
-            // Clear any existing interval before creating a new one
             if (afkInterval) clearInterval(afkInterval)
 
             afkInterval = setInterval(() => {
@@ -70,6 +87,5 @@ function createBot(username, delay = 5000) {
     }, delay)
 }
 
-// Stagger the two bots so they don't reconnect at the same time
 createBot('AFK_Bot', 1000)
 createBot('AFK_Bot_2', 8000)
