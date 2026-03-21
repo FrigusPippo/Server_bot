@@ -7,9 +7,12 @@ const SELF_URL = process.env.RENDER_EXTERNAL_URL
 
 // BOT_PAIR=1 runs AFK_Bot + AFK_Bot_2
 // BOT_PAIR=2 runs AFK_Bot_3 + AFK_Bot_4
-const pair = process.env.BOT_PAIR === '2'
+// No BOT_PAIR set = run all four (Replit)
+const pair = process.env.BOT_PAIR === '1'
+    ? ['AFK_Bot', 'AFK_Bot_2']
+    : process.env.BOT_PAIR === '2'
     ? ['AFK_Bot_3', 'AFK_Bot_4']
-    : ['AFK_Bot', 'AFK_Bot_2']
+    : ['AFK_Bot', 'AFK_Bot_2', 'AFK_Bot_3', 'AFK_Bot_4']
 
 // Small web server so external monitors have a URL to ping
 http.createServer((req, res) => {
@@ -91,5 +94,4 @@ function createBot(username, delay = 5000) {
     }, delay)
 }
 
-createBot(pair[0], 1000)
-createBot(pair[1], 8000)
+pair.forEach((username, i) => createBot(username, 1000 + i * 7000))
