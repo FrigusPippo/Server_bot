@@ -5,13 +5,19 @@ const https = require('https')
 const PORT = process.env.PORT || 3000
 const SELF_URL = process.env.RENDER_EXTERNAL_URL
 
+// BOT_PAIR=1 runs AFK_Bot + AFK_Bot_2
+// BOT_PAIR=2 runs AFK_Bot_3 + AFK_Bot_4
+const pair = process.env.BOT_PAIR === '2'
+    ? ['AFK_Bot_3', 'AFK_Bot_4']
+    : ['AFK_Bot', 'AFK_Bot_2']
+
 // Small web server so external monitors have a URL to ping
 http.createServer((req, res) => {
     res.writeHead(200)
     res.end('Bot is running!')
 }).listen(PORT, () => console.log('Web server running!'))
 
-// Self-ping every 4 minutes to stay alive without relying on UptimeRobot
+// Self-ping every 4 minutes to stay alive
 if (SELF_URL) {
     setInterval(() => {
         https.get(SELF_URL, (res) => {
@@ -21,8 +27,6 @@ if (SELF_URL) {
         })
     }, 4 * 60 * 1000)
     console.log(`Self-pinging ${SELF_URL} every 4 minutes`)
-} else {
-    console.log('No RENDER_EXTERNAL_URL set, skipping self-ping')
 }
 
 // Prevent any single crash from taking down the whole process
@@ -87,5 +91,5 @@ function createBot(username, delay = 5000) {
     }, delay)
 }
 
-createBot('AFK_Bot', 1000)
-createBot('AFK_Bot_2', 8000)
+createBot(pair[0], 1000)
+createBot(pair[1], 8000)
